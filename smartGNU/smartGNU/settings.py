@@ -26,7 +26,7 @@ SECRET_KEY = 'd%4ok*5ionsw*sxbk^mpve^e^z0j%ccv9ya3vfe0)2f#*ye8tq'
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-
+CORS_ORIGIN_ALLOW_ALL=True
 
 # Application definition
 
@@ -45,6 +45,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -162,5 +163,3 @@ MQTT_SERVER = ''
 MQTT_PUBLIC_PORT = ''
 MQTT_SECURE_PORT = ''
 
-CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOW_CREDENTIALS = False
