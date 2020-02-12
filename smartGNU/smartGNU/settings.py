@@ -147,7 +147,7 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static")
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, "static"),
+    os.path.join(BASE_DIR, "smartGNU/static"),
 )
 
 GOOGLE_CLIENT_ID = '85906610984-qog0si0va6si6tnj3tij46b7r3gv9n8g.apps.googleusercontent.com'
