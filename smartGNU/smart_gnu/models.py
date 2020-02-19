@@ -15,29 +15,37 @@ SWITCH = (
     (1, True),
 )
 
-class User(models.Model):
-    user = models.ForeignKey(User,on_delete=models.CASCADE)
-    user_type = models.IntegerField(choices=USER_TYPE, null=True)
-    profile_image = models.CharField(max_length=1000, null=True,blank=True)
-
-class University(models.Model):
-    university_name = models.CharField(max_length=500, null=True,blank=True)
+class College(models.Model):
+    college_name = models.CharField(max_length=500, null=True,blank=True)
 
     def __str__(self):
-        return self.university_name
+        return self.college_name
+
+class CollegeUser(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE,null=True)
+    user_type = models.IntegerField(choices=USER_TYPE, null=True)
+    profile_image = models.CharField(max_length=1000, null=True,blank=True)
+    college = models.ForeignKey(College, on_delete=models.SET_NULL,null=True)
 
 class Department(models.Model):
     department_name = models.CharField(max_length=500, null=True,blank=True)
-    university = models.ForeignKey(University, on_delete=models.CASCADE, null=True,blank=True)
+    college = models.ForeignKey(College, on_delete=models.CASCADE, null=True,blank=True)
 
     def __str__(self):
         return self.department_name
 
-class Devices(models.Model):
+class Lab(models.Model):
+    lab_number = models.CharField(max_length=200, null=True)
+    department = models.ForeignKey(Department, on_delete=models.CASCADE, null=True)
+
+    def __str__(self):
+        return self.lab_number
+
+class Device(models.Model):
     device_name = models.CharField(max_length=500, null=True,blank=True)
     topic = models.CharField(max_length=500, null=True,blank=True)
     message = models.IntegerField(choices=SWITCH,default=0, null=True, blank=True)
-    department = models.ForeignKey(Department, on_delete=models.CASCADE, null=True,blank=True)
+    lab = models.ForeignKey(Lab, on_delete=models.CASCADE, null=True,blank=True)
 
     def __str__(self):
         return self.device_name

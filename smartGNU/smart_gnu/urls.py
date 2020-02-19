@@ -3,11 +3,11 @@ from .views import *
 from rest_framework import routers
 
 router = routers.SimpleRouter()
-router.register('', smart_gnu_apis)
-router.register("mqtt_api",mqtt_apis, basename='mqtt_api')
-router.register("university", universityviewset, basename='university')
-router.register("department", departmentviewset, basename='department')
-router.register("devices", devicesviewset, basename='devices')
+router.register('college_user', CollegeUserViewSet, basename='college_user')
+router.register("college", Collegeviewset, basename='college')
+router.register("department", Departmentviewset, basename='department')
+router.register("lab", Labviewset, basename='lab')
+router.register("device", Deviceviewset, basename='device')
 
 urlpatterns = [
     path('', include(router.urls)),

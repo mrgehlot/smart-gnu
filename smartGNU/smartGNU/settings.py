@@ -158,9 +158,18 @@ STATICFILES_DIRS = (
 GOOGLE_CLIENT_ID = '85906610984-qog0si0va6si6tnj3tij46b7r3gv9n8g.apps.googleusercontent.com'
 
 # cloud MQTT credentials
-MQTT_USERNAME = ''
-MQTT_PASSWORD = ''
-MQTT_SERVER = ''
-MQTT_PUBLIC_PORT = ''
+MQTT_USERNAME = 'ngtyutmq'
+MQTT_PASSWORD = 'mItz0RMt1UtC'
+MQTT_SERVER = 'hairdresser.cloudmqtt.com'
+MQTT_PUBLIC_PORT = 16642
 MQTT_SECURE_PORT = ''
 
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'api_key': {
+            'type': 'apiKey',
+            'in': 'header',
+            'name': 'Authorization'
+        }
+    },
+}

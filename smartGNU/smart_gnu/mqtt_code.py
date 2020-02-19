@@ -5,9 +5,9 @@ from django.conf import settings
 def request_for_publish(topic,pay_load):
     try:
         client = mqtt.Client()
-        client.username_pw_set(username='ngtyutmq', password='mItz0RMt1UtC')
-        client.connect("hairdresser.cloudmqtt.com", 16642, 60)
-        client.publish(topic=topic, payload=pay_load)
+        client.username_pw_set(username=settings.MQTT_USERNAME, password=settings.MQTT_PASSWORD)
+        client.connect(settings.MQTT_SERVER, settings.MQTT_PUBLIC_PORT, 60)
+        client.publish(topic=topic, payload=pay_load, qos=1)
         client.on_publish()
         return
     except Exception as error:
