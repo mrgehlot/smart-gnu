@@ -82,8 +82,12 @@ WSGI_APPLICATION = 'smartGNU.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'smartgnu',
+        'USER': 'smartgnu_admin',
+        'PASSWORD': 'smartgnu@8198',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
@@ -155,13 +159,13 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
 
-GOOGLE_CLIENT_ID = '85906610984-qog0si0va6si6tnj3tij46b7r3gv9n8g.apps.googleusercontent.com'
+GOOGLE_CLIENT_ID = ''
 
 # cloud MQTT credentials
-MQTT_USERNAME = 'ngtyutmq'
-MQTT_PASSWORD = 'mItz0RMt1UtC'
-MQTT_SERVER = 'hairdresser.cloudmqtt.com'
-MQTT_PUBLIC_PORT = 16642
+MQTT_USERNAME = ''
+MQTT_PASSWORD = ''
+MQTT_SERVER = ''
+MQTT_PUBLIC_PORT = ''
 MQTT_SECURE_PORT = ''
 
 SWAGGER_SETTINGS = {
@@ -173,3 +177,9 @@ SWAGGER_SETTINGS = {
         }
     },
 }
+
+
+try:
+    from local_settings import *
+except ImportError:
+    pass
