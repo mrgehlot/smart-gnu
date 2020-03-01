@@ -8,6 +8,8 @@ router.register("college", Collegeviewset, basename='college')
 router.register("department", Departmentviewset, basename='department')
 router.register("lab", Labviewset, basename='lab')
 router.register("device", Deviceviewset, basename='device')
+router.register("user_type", UserTypeView, basename='user_type')
+router.register("invitation", InvitationViewSet, basename='invitation')
 
 urlpatterns = [
     path('', include(router.urls)),

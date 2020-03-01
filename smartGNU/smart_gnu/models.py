@@ -49,3 +49,8 @@ class Device(models.Model):
 
     def __str__(self):
         return self.device_name
+
+
+class Invitation(models.Model):
+    email=  models.CharField(max_length=500, null=True,blank=True)
+    user_type = models.IntegerField(choices=USER_TYPE, null=True,blank=True)

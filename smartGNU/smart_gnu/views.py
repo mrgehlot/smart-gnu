@@ -4,14 +4,15 @@ from rest_framework.response import Response
 from rest_framework import status
 from django_filters.rest_framework import DjangoFilterBackend
 import requests
-from .models import User,CollegeUser, College,Department,Lab,Device
+from .models import *
 from .serializers import UserProfileSerializer,\
                         CollegeSerializer,\
                         DepartmentSerializer,\
                         DeviceSerializer, \
                         LabSerializer,\
                         GoogleAuthCodeSerializer,\
-                        MqttSerializer
+                        MqttSerializer,\
+                        InvitationSerializer
 from rest_framework.authtoken.models import Token
 from .mqtt_code import request_for_publish
 
@@ -94,3 +95,18 @@ class Deviceviewset(ModelViewSet):
 
         request_for_publish(topic, payload)
         return Response(data={"message": "payload has been sent."}, status=status.HTTP_200_OK)
+
+
+class UserTypeView(ViewSet):
+    permission_classes = ()
+    authentication_classes = ()
+
+    def list(self,request,format=None):
+        return Response(data=dict((id,user_type) for id,user_type in USER_TYPE),status=status.HTTP_200_OK)
+
+
+class InvitationViewSet(ModelViewSet):
+    permission_classes = ()
+    authentication_classes = ()
+    queryset = Invitation.objects.all()
+    serializer_class = InvitationSerializer

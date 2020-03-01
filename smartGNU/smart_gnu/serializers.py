@@ -40,3 +40,13 @@ class MqttSerializer(serializers.Serializer):
     payload = serializers.BooleanField()
     class Meta:
         fields = ('topic','payload')
+
+# class UserTypeSerializer(serializers.Serializer):
+#
+#     class Meta:
+#         fields = ('id','user_type')
+
+class InvitationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Invitation
+        fields = ('id', 'email','user_type')
