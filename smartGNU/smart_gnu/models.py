@@ -18,6 +18,8 @@ SWITCH = (
 class College(models.Model):
     college_name = models.CharField(max_length=500, null=True,blank=True)
 
+    class Meta:
+        unique_together = ('college_name',)
     def __str__(self):
         return self.college_name
 
@@ -31,12 +33,18 @@ class Department(models.Model):
     department_name = models.CharField(max_length=500, null=True,blank=True)
     college = models.ForeignKey(College, on_delete=models.CASCADE, null=True,blank=True)
 
+    class Meta:
+        unique_together = ('department_name','college')
+
     def __str__(self):
         return self.department_name
 
 class Lab(models.Model):
     lab_number = models.CharField(max_length=200, null=True)
     department = models.ForeignKey(Department, on_delete=models.CASCADE, null=True)
+
+    class Meta:
+        unique_together = ('lab_number', 'department')
 
     def __str__(self):
         return self.lab_number
@@ -46,6 +54,9 @@ class Device(models.Model):
     topic = models.CharField(max_length=500, null=True,blank=True)
     message = models.IntegerField(choices=SWITCH,default=0, null=True, blank=True)
     lab = models.ForeignKey(Lab, on_delete=models.CASCADE, null=True,blank=True)
+
+    class Meta:
+        unique_together = ('device_name','lab')
 
     def __str__(self):
         return self.device_name

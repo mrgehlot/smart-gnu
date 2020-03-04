@@ -14,6 +14,7 @@ def request_for_publish(topic,pay_load):
         return error
 
 
+
 # def on_connect(client, userdata, flags, rc):
 #     print("Connected with result code "+str(rc))
 #
