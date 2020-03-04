@@ -86,7 +86,7 @@ DATABASES = {
         'NAME': 'smartgnudb',
         'USER': 'smartgnuuser',
         'PASSWORD': 'smartgnu8198',
-        'HOST': 'localhost',
+        'HOST': '104.198.97.15',
         'PORT': '5432',
     }
 }
