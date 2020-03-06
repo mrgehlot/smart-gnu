@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'rest_framework',
     'rest_framework_swagger',
+    'constance',
     'smart_gnu',
     'corsheaders'
 ]
@@ -160,14 +161,6 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'smart_gnu/static'),
 )
 
-GOOGLE_CLIENT_ID = ''
-
-# cloud MQTT credentials
-MQTT_USERNAME = ''
-MQTT_PASSWORD = ''
-MQTT_SERVER = ''
-MQTT_PUBLIC_PORT = ''
-MQTT_SECURE_PORT = ''
 
 SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {
@@ -179,6 +172,22 @@ SWAGGER_SETTINGS = {
     },
 }
 
+CONSTANCE_BACKEND = 'constance.backends.database.DatabaseBackend'
+CONSTANCE_IGNORE_ADMIN_VERSION_CHECK = True
+CONSTANCE_CONFIG = {
+    'MQTT_USERNAME': ('ngtyutmq', 'mqtt username',str),
+    'MQTT_PASSWORD': ('mItz0RMt1UtC', 'mqtt password',str),
+    'MQTT_SERVER': ('hairdresser.cloudmqtt.com', 'mqtt server address',str),
+    'MQTT_PUBLIC_PORT': (16642, 'mqtt public port',int),
+    'MQTT_SECURE_PORT': (0, 'mqtt ssl port',int),
+    'GOOGLE_CLIENT_ID' : ("85906610984-qog0si0va6si6tnj3tij46b7r3gv9n8g.apps.googleusercontent.com",
+                          'goole console client id',str),
+}
+
+CONSTANCE_CONFIG_FIELDSETS = {
+    'MQTT Options': ('MQTT_USERNAME', 'MQTT_PASSWORD','MQTT_SERVER','MQTT_PUBLIC_PORT','MQTT_SECURE_PORT'),
+    'Google options': ('GOOGLE_CLIENT_ID',)
+}
 
 try:
     from .local_settings import *

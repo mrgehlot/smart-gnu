@@ -1,12 +1,12 @@
 import paho.mqtt.client as mqtt
-from django.conf import settings
+from constance import config
 # The callback for when the client receives a CONNACK response from the server.
 
 def request_for_publish(topic,pay_load):
     try:
         client = mqtt.Client()
-        client.username_pw_set(username=settings.MQTT_USERNAME, password=settings.MQTT_PASSWORD)
-        client.connect(settings.MQTT_SERVER, settings.MQTT_PUBLIC_PORT, 60)
+        client.username_pw_set(username=config.MQTT_USERNAME, password=config.MQTT_PASSWORD)
+        client.connect(config.MQTT_SERVER, config.MQTT_PUBLIC_PORT, 60)
         client.publish(topic=topic, payload=pay_load, qos=1)
         client.on_publish()
         return
