@@ -35,16 +35,15 @@ class DeviceSerializer(serializers.ModelSerializer):
         model = Device
         fields = ('id','device_name', 'topic', 'message', 'gpio_pin','node_mcu')
 
-class MqttSerializer(serializers.Serializer):
+
+class DeviceUpdateSerializer(serializers.Serializer):
     topic = serializers.CharField()
     payload = serializers.JSONField()
+    message = serializers.CharField()
     class Meta:
-        fields = ('topic','payload')
+        fields = ('topic','payload','message')
 
-# class UserTypeSerializer(serializers.Serializer):
-#
-#     class Meta:
-#         fields = ('id','user_type')
+
 
 class InvitationSerializer(serializers.ModelSerializer):
     class Meta:

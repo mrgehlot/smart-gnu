@@ -11,10 +11,10 @@ from .serializers import UserProfileSerializer,\
                         DeviceSerializer, \
                         LabSerializer,\
                         GoogleAuthCodeSerializer,\
-                        MqttSerializer,\
                         InvitationSerializer, \
                         NodeMCUCreateSerializer, \
-                        NodeMCUSerializer
+                        NodeMCUSerializer,\
+                        DeviceUpdateSerializer
 from rest_framework.authtoken.models import Token
 from .mqtt_code import request_for_publish
 
@@ -78,27 +78,32 @@ class Deviceviewset(ModelViewSet):
     queryset = Device.objects.all()
     serializer_class = DeviceSerializer
     filter_backends = (DjangoFilterBackend,)
-    filterset_fields = ('node_mcu',)
+    filterset_fields = ('node_mcu__lab',)
     authentication_classes = ()
     permission_classes = ()
 
     def get_serializer_class(self):
-        if self.action == 'publish_message':
-            return MqttSerializer
+        if self.action == 'partial_update':
+            return DeviceUpdateSerializer
         else:
             return DeviceSerializer
 
-    @action(methods=['POST'], detail=False)
-    def publish_message(self, request):
-        serializer = MqttSerializer(data=request.data)
+    def partial_update(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data,partial=True)
         serializer.is_valid(raise_exception=True)
-        topic= serializer.data.get('topic')
+        topic = serializer.data.get('topic')
         payload = serializer.data.get('payload')
-
+        message = int(serializer.data.get('message'))
+        if message == 1:
+            payload['switch'] = "True"
+        else:
+            payload['switch'] = "False"
         published, error = request_for_publish(topic, payload)
         if not published:
             return Response(data={error}, status=status.HTTP_400_BAD_REQUEST)
+        Device.objects.filter(id=kwargs.get('pk')).update(message=message)
         return Response(data={"message": "payload has been sent."}, status=status.HTTP_200_OK)
+
 
 
 class UserTypeView(ViewSet):
@@ -118,6 +123,8 @@ class InvitationViewSet(ModelViewSet):
 class NodeMCUViewSet(ModelViewSet):
     queryset = NodeMCU.objects.all()
     serializer_class = NodeMCUSerializer
+    filter_backends = (DjangoFilterBackend,)
+    filterset_fields = ('lab',)
     permission_classes = ()
     authentication_classes = ()
 
