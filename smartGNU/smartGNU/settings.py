@@ -78,6 +78,15 @@ TEMPLATES = [
 WSGI_APPLICATION = 'smartGNU.wsgi.application'
 
 
+# CHANNEL_LAYERS = {
+#     'default': {
+#         'BACKEND': 'channels_redis.core.RedisChannelLayer',
+#         'CONFIG': {
+#             "hosts": [CHANNEL_REDIS_HOST],
+#             "symmetric_encryption_keys": [SECRET_KEY],
+#         },
+#     },
+# }
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 

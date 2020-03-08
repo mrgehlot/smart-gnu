@@ -12,7 +12,9 @@ from .serializers import UserProfileSerializer,\
                         LabSerializer,\
                         GoogleAuthCodeSerializer,\
                         MqttSerializer,\
-                        InvitationSerializer
+                        InvitationSerializer, \
+                        NodeMCUCreateSerializer, \
+                        NodeMCUSerializer
 from rest_framework.authtoken.models import Token
 from .mqtt_code import request_for_publish
 
@@ -76,7 +78,7 @@ class Deviceviewset(ModelViewSet):
     queryset = Device.objects.all()
     serializer_class = DeviceSerializer
     filter_backends = (DjangoFilterBackend,)
-    filterset_fields = ('lab',)
+    filterset_fields = ('node_mcu',)
     authentication_classes = ()
     permission_classes = ()
 
@@ -93,7 +95,9 @@ class Deviceviewset(ModelViewSet):
         topic= serializer.data.get('topic')
         payload = serializer.data.get('payload')
 
-        request_for_publish(topic, payload)
+        published, error = request_for_publish(topic, payload)
+        if not published:
+            return Response(data={error}, status=status.HTTP_400_BAD_REQUEST)
         return Response(data={"message": "payload has been sent."}, status=status.HTTP_200_OK)
 
 
@@ -110,3 +114,21 @@ class InvitationViewSet(ModelViewSet):
     authentication_classes = ()
     queryset = Invitation.objects.all()
     serializer_class = InvitationSerializer
+
+class NodeMCUViewSet(ModelViewSet):
+    queryset = NodeMCU.objects.all()
+    serializer_class = NodeMCUSerializer
+    permission_classes = ()
+    authentication_classes = ()
+
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return NodeMCUCreateSerializer
+        return NodeMCUSerializer
+
+    def create(self, request, *args, **kwargs):
+        lab_obj = Lab.objects.get(lab_number=request.data.get('lab_number'))
+        node_obj,created =NodeMCU.objects.get_or_create(lab = lab_obj,
+                        node_mcu_ip = request.data.get('node_mcu_ip'))
+        return Response({"message":"device added successfully"},
+                        status=status.HTTP_201_CREATED)
