@@ -37,7 +37,7 @@ class College(models.Model):
         return self.college_name
 
 class CollegeUser(models.Model):
-    user = models.ForeignKey(User,on_delete=models.CASCADE,null=True)
+    user = models.OneToOneField(User,on_delete=models.CASCADE,null=True)
     user_type = models.IntegerField(choices=USER_TYPE, null=True)
     profile_image = models.CharField(max_length=1000, null=True,blank=True)
     college = models.ForeignKey(College, on_delete=models.SET_NULL,null=True)
@@ -55,8 +55,9 @@ class Department(models.Model):
 class Lab(models.Model):
     lab_number = models.CharField(max_length=200, null=True)
     department = models.ForeignKey(Department, on_delete=models.CASCADE, null=True)
+    qr_code = models.CharField(max_length=1000,null=True,blank=True)
     class Meta:
-        unique_together = ('lab_number', 'department')
+        unique_together = ('lab_number', 'department','qr_code')
 
     def __str__(self):
         return self.lab_number
@@ -89,4 +90,6 @@ class Device(models.Model):
 class Invitation(models.Model):
     email=  models.CharField(max_length=500, null=True,blank=True)
     user_type = models.IntegerField(choices=USER_TYPE, null=True,blank=True)
+
+
 

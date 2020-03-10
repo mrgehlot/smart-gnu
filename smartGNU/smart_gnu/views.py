@@ -14,7 +14,8 @@ from .serializers import UserProfileSerializer,\
                         InvitationSerializer, \
                         NodeMCUCreateSerializer, \
                         NodeMCUSerializer,\
-                        DeviceUpdateSerializer
+                        DeviceUpdateSerializer,\
+                        QrCodeSerializer
 from rest_framework.authtoken.models import Token
 from .mqtt_code import request_for_publish
 
@@ -73,6 +74,19 @@ class Labviewset(ModelViewSet):
     filterset_fields = ('department',)
     authentication_classes = ()
     permission_classes = ()
+
+    def get_serializer_class(self):
+        if self.action == "check_qr_code":
+            return QrCodeSerializer
+        return LabSerializer
+
+    @action(methods=["POST"],detail=False)
+    def check_qr_code(self,request):
+        serializer = self.get_serializer(data = request.data)
+        serializer.is_valid(raise_exception= True)
+        if self.queryset.filter(id = request.data.get('lab_id'),qr_code = request.data.get('qr_code')).exists():
+            return Response({'flag': True}, status=200)
+        return Response({'flag': False}, status=401)
 
 class Deviceviewset(ModelViewSet):
     queryset = Device.objects.all()

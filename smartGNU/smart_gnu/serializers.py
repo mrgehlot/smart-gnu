@@ -53,6 +53,7 @@ class InvitationSerializer(serializers.ModelSerializer):
 class NodeMCUCreateSerializer(serializers.Serializer):
     lab_number = serializers.CharField()
     node_mcu_ip = serializers.CharField()
+
     class Meta:
         fields = ('lab_number','node_mcu_ip')
 
@@ -60,3 +61,10 @@ class NodeMCUSerializer(serializers.ModelSerializer):
     class Meta:
         model = NodeMCU
         fields = ('id', 'lab','node_mcu_ip')
+
+class QrCodeSerializer(serializers.Serializer):
+    lab_id = serializers.CharField()
+    qr_code = serializers.CharField()
+
+    class Meta:
+        fields = ('lab_id', 'qr_code')
