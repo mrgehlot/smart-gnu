@@ -11,8 +11,11 @@ from .serializers import UserProfileSerializer,\
                         DeviceSerializer, \
                         LabSerializer,\
                         GoogleAuthCodeSerializer,\
-                        MqttSerializer,\
-                        InvitationSerializer
+                        InvitationSerializer, \
+                        NodeMCUCreateSerializer, \
+                        NodeMCUSerializer,\
+                        DeviceUpdateSerializer,\
+                        QrCodeSerializer
 from rest_framework.authtoken.models import Token
 from .mqtt_code import request_for_publish
 
@@ -72,29 +75,49 @@ class Labviewset(ModelViewSet):
     authentication_classes = ()
     permission_classes = ()
 
+    def get_serializer_class(self):
+        if self.action == "check_qr_code":
+            return QrCodeSerializer
+        return LabSerializer
+
+    @action(methods=["POST"],detail=False)
+    def check_qr_code(self,request):
+        serializer = self.get_serializer(data = request.data)
+        serializer.is_valid(raise_exception= True)
+        if self.queryset.filter(id = request.data.get('lab_id'),qr_code = request.data.get('qr_code')).exists():
+            return Response({'flag': True}, status=200)
+        return Response({'flag': False}, status=401)
+
 class Deviceviewset(ModelViewSet):
     queryset = Device.objects.all()
     serializer_class = DeviceSerializer
     filter_backends = (DjangoFilterBackend,)
-    filterset_fields = ('lab',)
+    filterset_fields = ('node_mcu__lab',)
     authentication_classes = ()
     permission_classes = ()
 
     def get_serializer_class(self):
-        if self.action == 'publish_message':
-            return MqttSerializer
+        if self.action == 'partial_update':
+            return DeviceUpdateSerializer
         else:
             return DeviceSerializer
 
-    @action(methods=['POST'], detail=False)
-    def publish_message(self, request):
-        serializer = MqttSerializer(data=request.data)
+    def partial_update(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data,partial=True)
         serializer.is_valid(raise_exception=True)
-        topic= serializer.data.get('topic')
+        topic = serializer.data.get('topic')
         payload = serializer.data.get('payload')
-
-        request_for_publish(topic, payload)
+        message = int(serializer.data.get('message'))
+        if message == 1:
+            payload['switch'] = "True"
+        else:
+            payload['switch'] = "False"
+        published, error = request_for_publish(topic, payload)
+        if not published:
+            return Response(data={error}, status=status.HTTP_400_BAD_REQUEST)
+        Device.objects.filter(id=kwargs.get('pk')).update(message=message)
         return Response(data={"message": "payload has been sent."}, status=status.HTTP_200_OK)
+
 
 
 class UserTypeView(ViewSet):
@@ -110,3 +133,23 @@ class InvitationViewSet(ModelViewSet):
     authentication_classes = ()
     queryset = Invitation.objects.all()
     serializer_class = InvitationSerializer
+
+class NodeMCUViewSet(ModelViewSet):
+    queryset = NodeMCU.objects.all()
+    serializer_class = NodeMCUSerializer
+    filter_backends = (DjangoFilterBackend,)
+    filterset_fields = ('lab',)
+    permission_classes = ()
+    authentication_classes = ()
+
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return NodeMCUCreateSerializer
+        return NodeMCUSerializer
+
+    def create(self, request, *args, **kwargs):
+        lab_obj = Lab.objects.get(lab_number=request.data.get('lab_number'))
+        node_obj,created =NodeMCU.objects.get_or_create(lab = lab_obj,
+                        node_mcu_ip = request.data.get('node_mcu_ip'))
+        return Response({"message":"device added successfully"},
+                        status=status.HTTP_201_CREATED)

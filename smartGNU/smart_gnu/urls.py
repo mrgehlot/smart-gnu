@@ -10,6 +10,7 @@ router.register("lab", Labviewset, basename='lab')
 router.register("device", Deviceviewset, basename='device')
 router.register("user_type", UserTypeView, basename='user_type')
 router.register("invitation", InvitationViewSet, basename='invitation')
+router.register("node_mcu", NodeMCUViewSet, basename='node_mcu')
 
 urlpatterns = [
     path('', include(router.urls)),

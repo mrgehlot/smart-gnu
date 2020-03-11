@@ -1,17 +1,20 @@
+from .models import NodeMCU,Lab
 import paho.mqtt.client as mqtt
-from django.conf import settings
-# The callback for when the client receives a CONNACK response from the server.
+from constance import config
+import json
 
+
+
+client = mqtt.Client()
+client.username_pw_set(username=config.MQTT_USERNAME, password=config.MQTT_PASSWORD)
 def request_for_publish(topic,pay_load):
     try:
-        client = mqtt.Client()
-        client.username_pw_set(username=settings.MQTT_USERNAME, password=settings.MQTT_PASSWORD)
-        client.connect(settings.MQTT_SERVER, settings.MQTT_PUBLIC_PORT, 60)
+        client.connect(config.MQTT_SERVER, config.MQTT_PUBLIC_PORT, 60)
+        pay_load = json.dumps(pay_load)
         client.publish(topic=topic, payload=pay_load, qos=1)
-        client.on_publish()
-        return
+        return True, None
     except Exception as error:
-        return error
+        return False, error
 
 
 
@@ -36,4 +39,3 @@ def request_for_publish(topic,pay_load):
 # # Other loop*() functions are available that give a threaded interface and a
 # # manual interface.
 # client.loop_forever()
-#
