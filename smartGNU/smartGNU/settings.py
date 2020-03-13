@@ -95,7 +95,7 @@ WSGI_APPLICATION = 'smartGNU.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'smartgnudb',
+        'NAME': 'smartgnudatabase',
         'USER': 'smartgnuuser',
         'PASSWORD': 'smartgnu8198',
         'HOST': '104.198.97.15',
