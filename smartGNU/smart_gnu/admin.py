@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.conf import settings
-from .models import CollegeUser,Device,Department, College,Lab
+from .models import CollegeUser,Device,Department, College,Lab,User
 from .mqtt_code import *
 # Register your models here.
 
@@ -8,9 +8,10 @@ class UserAdmin(admin.ModelAdmin):
     list_display = ['id','username','profile_image']
 
     def username(self,obj):
-        return obj.user.username
+        return obj.username
 
 class CollegeAdmin(admin.ModelAdmin):
+    model = CollegeUser
     list_display = ['id','college_name']
 
 class DepartmentAdmin(admin.ModelAdmin):

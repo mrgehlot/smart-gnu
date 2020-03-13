@@ -2,8 +2,8 @@ from rest_framework import serializers
 from .views import *
 from .models import *
 class UserProfileSerializer(serializers.ModelSerializer):
-    username = serializers.CharField(source='user.username')
-    email = serializers.CharField(source='user.email')
+    # username = serializers.CharField(source='user.username')
+    # email = serializers.CharField(source='user.email')
     class Meta:
         model = CollegeUser
         fields = ('id','username', 'user_type', 'profile_image', 'email')

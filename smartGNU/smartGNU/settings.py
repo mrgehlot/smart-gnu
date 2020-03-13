@@ -30,6 +30,8 @@ CORS_ORIGIN_ALLOW_ALL=True
 
 # Application definition
 
+AUTH_USER_MODEL = 'smart_gnu.CollegeUser'
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -108,16 +110,12 @@ REST_FRAMEWORK = {
     # or allow read-only access for unauthenticated users.
 
     'DEFAULT_AUTHENTICATION_CLASSES': (
-
           'rest_framework.authentication.TokenAuthentication',
     ),
 
     'DEFAULT_PERMISSION_CLASSES': (
-
         'rest_framework.permissions.IsAuthenticated',
-
         # 'rest_framework.permissions.AllowAny',
-
     ),
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 100,
@@ -126,6 +124,8 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 
 }
+
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.0/ref/settings/#auth-password-validators
@@ -181,6 +181,7 @@ SWAGGER_SETTINGS = {
             'name': 'Authorization'
         }
     },
+    'IGNORE_USER_PERMISSIONS' : True
 }
 
 CONSTANCE_BACKEND = 'constance.backends.database.DatabaseBackend'

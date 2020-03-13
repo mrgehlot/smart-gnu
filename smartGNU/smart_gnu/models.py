@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AbstractUser
 # Create your models here.
 # def user_profile_image(instance,filename):
 #     return instance.username
@@ -16,18 +16,17 @@ SWITCH = (
 )
 
 GPIO_PINS = (
-    (1, 1),
-    (2, 2),
-    (3, 3),
-    (4, 4),
-    (5, 5),
-    (6, 6),
-    (7, 7),
-    (8, 8),
-    (9, 9),
-    (10, 10),
-    (11, 11),
-    (12, 12)
+    (0,  0),
+    (1,  1),
+    (2,  2),
+    (3,  3),
+    (4,  4),
+    (5,  5),
+    (12, 12),
+    (13, 13),
+    (14,  14),
+    (15,  15),
+    (16, 16),
 )
 
 class College(models.Model):
@@ -38,8 +37,7 @@ class College(models.Model):
     def __str__(self):
         return self.college_name
 
-class CollegeUser(models.Model):
-    user = models.OneToOneField(User,on_delete=models.CASCADE,null=True)
+class CollegeUser(AbstractUser):
     user_type = models.IntegerField(choices=USER_TYPE, null=True)
     profile_image = models.CharField(max_length=1000, null=True,blank=True)
     college = models.ForeignKey(College, on_delete=models.SET_NULL,null=True)
