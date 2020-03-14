@@ -11,7 +11,7 @@ pre_save.connect(add_topic,sender=Device)
 #     if created:
 #         request_for_publish(topic=instance.lab.lab_number.replace(" ",""),pay_load=instance.device_name.replace(" ",""))
 # post_save.connect(publish_topic,sender=Device)
-GPIO_PINS = [0,1,2,3,4,5,12,13,14,15,16]
+GPIO_PINS = [0,2,4,5,9,10,12,13,14,15,16,17]
 
 def add_devices(instance,created,**kwargs):
     with transaction.atomic():
