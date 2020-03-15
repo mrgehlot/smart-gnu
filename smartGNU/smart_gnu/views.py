@@ -32,21 +32,20 @@ class CollegeUserViewSet(ModelViewSet):
         google_response = requests.get(url='https://www.googleapis.com/oauth2/v3/userinfo',
                                        params={'access_token': request.data.get('code')})
         user_profile = google_response.json()
-        user_obj = self.queryset.filter(user__email=user_profile.get('email')).first()
+        user_obj = self.queryset.filter(email=user_profile.get('email')).first()
         if user_obj:
             if not user_obj.profile_image:
                 user_obj.profile_image = user_profile.get('picture')
                 user_obj.save()
         else:
-            user = User.objects.create(email=user_profile.get('email'),
-                                       username=user_profile.get('name'),
-                                       first_name=user_profile.get('given_name'),
-                                       last_name=user_profile.get('family_name'))
-            user_obj = CollegeUser.objects.create(profile_image=user_profile.get('picture'),
-                                                  user=user)
+            user_obj = CollegeUser.objects.create(email=user_profile.get('email'),
+                                                  username=user_profile.get('name'),
+                                                  first_name=user_profile.get('given_name'),
+                                                  last_name=user_profile.get('family_name'),
+                                                  profile_image=user_profile.get('picture'))
 
         user_data = UserProfileSerializer(user_obj).data
-        token_obj, created = Token.objects.get_or_create(user=user_obj.user)
+        token_obj, created = Token.objects.get_or_create(user=user_obj)
         user_data['user_token'] = token_obj.key
         return Response(data={"user": user_data}, status=status.HTTP_200_OK)
 
